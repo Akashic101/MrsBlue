@@ -1,0 +1,26 @@
+{
+  "name": "mrsblue",
+  "version": "1.0.0",
+  "description": "A Discord-Bot for OkBlueComics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Akashic101/MrsBlue.git"
+  },
+  "author": "Akashic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Akashic101/MrsBlue/issues"
+  },
+  "homepage": "https://github.com/Akashic101/MrsBlue#readme",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0",
+    "pjson": "^1.0.9",
+    "sequelize": "^6.3.3",
+    "sqlite3": "^5.0.0"
+  }
+}
