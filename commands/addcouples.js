@@ -2,15 +2,15 @@ const Sequelize = require('sequelize');
 const Discord = require('discord.js');
 var pjson = require('../package.json');
 
-const randomSeq = new Sequelize('database', 'user', 'password', {
+const couplesSeq = new Sequelize('database', 'user', 'password', {
 	host: 'localhost',
 	dialect: 'sqlite',
 	logging: false,
 	// SQLite only
-	storage: 'random.sqlite',
+	storage: 'couples.sqlite',
 });
 
-const random = randomSeq.define('random', {
+const couples = couplesSeq.define('couples', {
 	id: {
         primaryKey: true,
 		type: Sequelize.INTEGER,
@@ -26,11 +26,11 @@ const random = randomSeq.define('random', {
 	},
 });
 
-random.sync();
+couples.sync();
 
 module.exports = {
-	name: 'addcomic',
-	description: 'Adds a comic to the database',
+	name: 'addcouples',
+	description: 'Adds a couple-comic to the database',
 	async execute(message, args) {
 
         const serverLogEmbed = new Discord.MessageEmbed()
@@ -56,7 +56,7 @@ module.exports = {
         }
         else {
             try {
-                const add = await random.create({
+                const add = await couples.create({
                     image: args[0],
                     instagram: args[1]
                 });

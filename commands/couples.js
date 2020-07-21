@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
-var pjson = require('../package.json');
 const Discord = require('discord.js');
+var pjson = require('../package.json');
 
 const couplesSeq = new Sequelize('database', 'user', 'password', {
 	host: 'localhost',
@@ -27,13 +27,13 @@ const couples = couplesSeq.define('couples', {
 });
 
 module.exports = {
-	name: 'delcomic',
-	description: 'Deletes a comic from the database',
+	name: 'couples',
+	description: 'Sends a random couple-comic + the corresponding Instagram-Link',
 	async execute(message, args) {
-
+        
         const serverLogEmbed = new Discord.MessageEmbed()
-            .setColor('#56793c')
-            .setTitle(`**Deleted Comic**`)
+            .setColor('#ccb548')
+            .setTitle(`**Comic**`)
             .addFields(
                 { name: 'Username', value: message.member.user.tag},
                 { name: 'Command', value: message.content},
@@ -45,24 +45,23 @@ module.exports = {
         const channel = message.client.channels.cache.get(process.env.SERVER_LOG);
         channel.send(serverLogEmbed);
 
-        if (!message.member.roles.cache.has('734871932192948286')) {
-            return message.channel.send("I'm sorry, you do not have the permissions to do that. If you think this was a mistake please contact <@320574128568401920>")
-        }
-        else {
-            try {
-                for(var i = 0; i < args.length; i++) {
-                    const rowCount = await comics.destroy({ where: { image: args[i] } });
-    
-                    if (!rowCount) {
-                        message.channel.send('That comic did not exist.');
-                    }
-                    else {
-                        message.channel.send('Comic ' + args[i] + ' deleted.');
-                    }
-                }
-            } catch (e) {
-                console.log(e)
+        try {
+            const match = await couples.findOne({ order: Sequelize.literal('random()') })
+            if(match) {
+                const comicEmbed = new Discord.MessageEmbed()
+                    .setTitle('comic')
+                    .setColor('#2760ae')
+                    .setDescription(match.instagram)
+                    .setImage(match.image)
+                    .setTimestamp()
+                    .setFooter('MrsBlue V' + pjson.version, 'https://cdn.discordapp.com/app-icons/734868988772745258/010e16406effdab3e64ab46f04b36e83.png');
+                return message.channel.send(comicEmbed)
             }
+            else {
+                return message.channel.send('error');
+            }
+        } catch (e) {
+            message.channel.send("error: " + e);
         }
-	},
+    }  
 };

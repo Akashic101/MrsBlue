@@ -26,16 +26,14 @@ const random = randomSeq.define('random', {
 	},
 });
 
-random.sync();
-
 module.exports = {
-	name: 'addcomic',
-	description: 'Adds a comic to the database',
+	name: 'random',
+	description: 'Sends a random comic + the corresponding Instagram-Link',
 	async execute(message, args) {
-
+        
         const serverLogEmbed = new Discord.MessageEmbed()
-            .setColor('#cefa8b')
-            .setTitle(`**Comic Added**`)
+            .setColor('#3a0430')
+            .setTitle(`**Comic**`)
             .addFields(
                 { name: 'Username', value: message.member.user.tag},
                 { name: 'Command', value: message.content},
@@ -46,25 +44,24 @@ module.exports = {
             .setFooter('MrsBlue V' + pjson.version, 'https://cdn.discordapp.com/app-icons/734868988772745258/010e16406effdab3e64ab46f04b36e83.png');
         const channel = message.client.channels.cache.get(process.env.SERVER_LOG);
         channel.send(serverLogEmbed);
-        
-        if (!message.member.roles.cache.has('734871932192948286')) {
-            return message.channel.send("I'm sorry, you do not have the permissions to do that. If you think this was a mistake please contact <@320574128568401920>")  
-        }
-        else if (args.length != 2) {
-            message.channel.send("I'm sorry, it seems like you entered the command wrong. Please check if you entered it correcty or use !commands to see how your command should look like. If you believe there is an error, please contact <@320574128568401920>")
-            return
-        }
-        else {
-            try {
-                const add = await random.create({
-                    image: args[0],
-                    instagram: args[1]
-                });
-                return message.channel.send(`Comic ${add.image} with link ${add.instagram} added.`);
-                
-            } catch (e) {
-                return message.channel.send('Something went wrong with adding the entry. It might already exist in the database');
+
+        try {
+            const match = await random.findOne({ order: Sequelize.literal('random()') })
+            if(match) {
+                const comicEmbed = new Discord.MessageEmbed()
+                    .setTitle('comic')
+                    .setColor('#2760ae')
+                    .setDescription(match.instagram)
+                    .setImage(match.image)
+                    .setTimestamp()
+                    .setFooter('MrsBlue V' + pjson.version, 'https://cdn.discordapp.com/app-icons/734868988772745258/010e16406effdab3e64ab46f04b36e83.png');
+                return message.channel.send(comicEmbed)
             }
+            else {
+                return message.channel.send('error');
+            }
+        } catch (e) {
+            message.channel.send("error: " + e);
         }
-	},
+    }  
 };
