@@ -32,18 +32,24 @@ client.on('guildMemberAdd', (member) => {
 
   var date = new Date();
 
+  timeDifference = Math.abs(date.getTime() - member.user.createdAt.getTime());
+  timeDifference = timeDifference / (1000 * 3600 * 24)
+
   const memberJoinedEmbed = new Discord.MessageEmbed()
     .setColor('#cf8d1c')
     .setTitle('Member joined')
     .addFields(
         { name: 'Username', value: member.user.tag},
         { name: 'Joined at', value: date},
-        { name: 'Account created at', value: member.user.createdAt}
     )
     .setThumbnail(member.user.displayAvatarURL({ format: 'jpg' }))
     .setTimestamp()
-    .setFooter('MrsBlue V' + pjson.version, 'https://cdn.discordapp.com/app-icons/734868988772745258/010e16406effdab3e64ab46f04b36e83.png');
-  client.channels.cache.get(process.env.SERVER_LOG_CHANNEL).send(memberJoinedEmbed);
+    .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
+
+    if(timeDifference <= 7) {
+      memberJoinedEmbed.setDescription (`The account of ${member.user.tag} is only ${Math.ceil(timeDifference)} days old`)
+    }
+  client.channels.cache.get(process.env.SERVER_LOG).send(memberJoinedEmbed);
 });
 
 client.on('guildMemberRemove',(member) => {
@@ -59,8 +65,8 @@ client.on('guildMemberRemove',(member) => {
     )
     .setThumbnail(member.user.displayAvatarURL({ format: 'jpg' }))
     .setTimestamp()
-    .setFooter('MrsBlue V' + pjson.version, 'https://cdn.discordapp.com/app-icons/734868988772745258/010e16406effdab3e64ab46f04b36e83.png');
-  client.channels.cache.get(process.env.SERVER_LOG_CHANNEL).send(memberLeftEmbed);
+    .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
+  client.channels.cache.get(process.env.SERVER_LOG).send(memberLeftEmbed);
 });
 
 client.on("messageReactionAdd", (reaction, user) => {
@@ -75,7 +81,7 @@ client.on("messageReactionAdd", (reaction, user) => {
               .setDescription(`**${member.user.tag}** agreed to the rules at ` + d + ". He is in the server since " + Math.round((d - member.joinedAt) / 1000) + " seconds")
               .setColor("7F0000")
               .setTimestamp()
-              .setFooter('MrsBlue V' + pjson.version, 'https://cdn.discordapp.com/app-icons/734868988772745258/010e16406effdab3e64ab46f04b36e83.png');
+              .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
               client.channels.cache.get(process.env.SERVER_LOG).send(readyEmbed);
               }
           );
@@ -115,7 +121,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
     .setTitle('**Report**')
     .setColor('#CC0000')
     .setTimestamp()
-    .setFooter('MrsBlue V' + pjson.version, 'https://cdn.discordapp.com/app-icons/734868988772745258/010e16406effdab3e64ab46f04b36e83.png');
+    .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
 
   switch(reaction.emoji.name) {
     case '1️⃣' :
