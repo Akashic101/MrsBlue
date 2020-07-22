@@ -41,11 +41,11 @@ module.exports = {
             )
             .setThumbnail(message.member.user.displayAvatarURL({ format: 'jpg' }))
             .setTimestamp()
-            .setFooter('MrsBlue V' + pjson.version, 'https://cdn.discordapp.com/app-icons/734868988772745258/010e16406effdab3e64ab46f04b36e83.png');
+            .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
         const channel = message.client.channels.cache.get(process.env.SERVER_LOG);
         channel.send(serverLogEmbed);
 
-        if (!message.member.roles.cache.has('734871932192948286')) {
+        if (!message.member.roles.cache.has(process.env.MOD_ROLE)) {
             return message.channel.send("I'm sorry, you do not have the permissions to do that. If you think this was a mistake please contact <@320574128568401920>")
         }
         else {

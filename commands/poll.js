@@ -16,7 +16,7 @@ module.exports = {
             )
             .setThumbnail(message.member.user.displayAvatarURL({ format: 'jpg' }))
             .setTimestamp()
-            .setFooter('MrsBlue V' + pjson.version, 'https://cdn.discordapp.com/app-icons/734868988772745258/010e16406effdab3e64ab46f04b36e83.png');
+            .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
         const channel = message.client.channels.cache.get(process.env.SERVER_LOG);
         channel.send(serverLogEmbed);
 
@@ -28,7 +28,7 @@ module.exports = {
 			    .setDescription(message.author.username + ' wants to know: ' + messageContent.slice(6))
 			    .setColor((Math.random()*0xFFFFFF<<0).toString(16))
 			    .setTimestamp()
-                .setFooter('MrsBlue V' + pjson.version, 'https://cdn.discordapp.com/app-icons/734868988772745258/010e16406effdab3e64ab46f04b36e83.png');
+                .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
             message.channel.send(pollEmbed).then
                 (message => message.react('👍')).then(
                 (reaction => reaction.message.react('👎')))
