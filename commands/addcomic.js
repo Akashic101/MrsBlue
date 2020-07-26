@@ -47,6 +47,11 @@ module.exports = {
         const channel = message.client.channels.cache.get(process.env.SERVER_LOG);
         channel.send(serverLogEmbed);
         
+        if(message.channel.id != process.env.COMMAND_ID) {
+            message.delete()
+            return message.channel.send(`I\'m sorry but you are not allowed to use this command here`)
+        }
+
         if (!message.member.roles.cache.has(process.env.MOD_ROLE)) {
             return message.channel.send("I'm sorry, you do not have the permissions to do that. If you think this was a mistake please contact <@320574128568401920>")  
         }

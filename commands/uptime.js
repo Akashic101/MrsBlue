@@ -33,6 +33,10 @@ module.exports = {
         const channel = message.client.channels.cache.get(process.env.SERVER_LOG);
         channel.send(serverLogEmbed);
 
+        if(message.channel.id != process.env.MRS_BLUE_ID) {
+            return message.channel.send(`I\'m sorry but you are not allowed to use this command here. Please head over to <#${process.env.MRS_BLUE_ID}> and try there again`)
+        }
+
         const sentences = [
             'Maybe she should take a break soon',
             'Crazy how time flies when you are having fun',
@@ -40,15 +44,7 @@ module.exports = {
             'Let\'s cheer her on',
         ]
 
-        const allowedChannels = [
-            '735545896976121956'
-        ]
+        return message.channel.send('MrsBlue worked without a break since ' + sToTime(message.client.uptime)  + ' hours. ' + (sentences[Math.floor(Math.random() * sentences.length)]));
 
-        for(var i = 0; i < allowedChannels.length; i++) {
-            if(message.channel.id == allowedChannels[i]) {
-                return message.channel.send('MrsBlue worked without a break since ' + sToTime(message.client.uptime)  + ' hours. ' + (sentences[Math.floor(Math.random() * sentences.length)]));
-            }
-        }
-        return message.channel.send('I\'m sorry, but this command is not allowed here')
 	},
 };
