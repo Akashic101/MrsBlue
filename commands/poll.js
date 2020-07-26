@@ -1,39 +1,46 @@
 var pjson = require('../package.json');
-const Discord = require('discord.js');
+const {MessageEmbed} = require('discord.js');
 
 module.exports = {
-	name: 'poll',
-	description: 'Send info about the current Hot-Lap-Challenge!',
-	execute(message, args) {
+    name: 'poll',
+    description: 'Sends a poll members can vote on',
+    async execute(client, message, args) {
 
-        const serverLogEmbed = new Discord.MessageEmbed()
-            .setColor('#de0242')
-            .setTitle(`**Poll**`)
-            .addFields(
-                { name: 'Username', value: message.member.user.tag},
-                { name: 'Command', value: message.content},
-                { name: 'Date', value: date = new Date()}
-            )
-            .setThumbnail(message.member.user.displayAvatarURL({ format: 'jpg' }))
+        var result = message.content.substr(message.content.indexOf(" ") + 3);
+
+        const author = message.author.username
+
+        var pollEmbed = new MessageEmbed()
+            .setTitle('New Poll')
+            .setDescription(author + ' wants to know: ' + result)
+            .setColor('RANDOM')
             .setTimestamp()
             .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
-        const channel = message.client.channels.cache.get(process.env.SERVER_LOG);
-        channel.send(serverLogEmbed);
+        message.channel.send(pollEmbed)
+        .then(async(message) => {
+            await message.react("👍")
+            await message.react("👎")
+       
+            var filter = (reaction, user) => {
+                return reaction.emoji.name === "👍" || reaction.emoji.name === "👎" || !user.bot
+            };
 
-        messageContent = message.content;
+            var collector = message.createReactionCollector(filter, { time: args[0] * 60000 });
 
-        try {
-            let pollEmbed = new Discord.MessageEmbed()
-			    .setTitle('**New Poll**')
-			    .setDescription(message.author.username + ' wants to know: ' + messageContent.slice(6))
-			    .setColor((Math.random()*0xFFFFFF<<0).toString(16))
-			    .setTimestamp()
-                .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
-            message.channel.send(pollEmbed).then
-                (message => message.react('👍')).then(
-                (reaction => reaction.message.react('👎')))
-        } catch (e) {
-            console.log(e)
-        }
-	},
+            collector.on('end', collected => {
+
+                var pollResultEmbed = new MessageEmbed()
+                    .setTitle('Poll Result')
+                    .setDescription(author + ' wanted to know: ' + result)
+                    .addFields(
+                        {name: '👍', value: collected.get('👍').count - 1, inline: true},
+                        {name: '👎', value: collected.get('👎').count - 1, inline: true}
+                    )
+                    .setColor('RANDOM')
+                    .setTimestamp()
+                    .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
+                message.channel.send(pollResultEmbed)
+            });
+        })
+    }
 };
