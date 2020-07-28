@@ -29,7 +29,7 @@ const random = randomSeq.define('random', {
 module.exports = {
 	name: 'random',
 	description: 'Sends a random comic + the corresponding Instagram-Link',
-	async execute(message, args) {
+	async execute(client, message, args) {
         
         const serverLogEmbed = new Discord.MessageEmbed()
             .setColor('#3a0430')
