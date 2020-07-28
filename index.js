@@ -1,5 +1,6 @@
 require('dotenv').config();
 const Discord = require('discord.js');
+const Sequelize = require('sequelize');
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 const fs = require('fs');
 var pjson = require('./package.json');
@@ -14,6 +15,55 @@ for (const file of commandFiles) {
 const token = process.env.DISCORD_TOKEN;
 
 const prefix = '!';
+
+const levelSeq = new Sequelize('database', 'user', 'password', {
+	host: 'localhost',
+	dialect: 'sqlite',
+	logging: false,
+	// SQLite only
+  storage: 'level.sqlite',
+  timestamps: false,
+});
+
+//Model that defines the structure of the SweetyImages-database: More info: https://discordjs.guide/sequelize/#beta-creating-the-model
+const level = levelSeq.define('level', {
+	id: {
+    primaryKey: true,
+		type: Sequelize.INTEGER,
+    unique: true,
+  },
+  user_id: {
+    type: Sequelize.STRING,
+    unique: true,
+  },
+  xp: {
+		type: Sequelize.INTEGER,
+		defaultValue: 0,
+		allowNull: false,
+  }
+});
+
+const xp = levelSeq.define('xp', {
+	id: {
+        primaryKey: true,
+	    type: Sequelize.INTEGER,
+        unique: true,
+    },
+    level: {
+        type: Sequelize.INTEGER,
+        unique: true,
+    },
+    minimum: {
+		  type: Sequelize.INTEGER,
+		  defaultValue: 0,
+		  allowNull: false,
+    },
+    maximum: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+        allowNull: false,
+    }
+});
 
 client.login(token)
 
@@ -90,6 +140,37 @@ client.on("messageReactionAdd", (reaction, user) => {
 });
 
 client.on('message', async message => {
+
+  if (message.author.bot || message.author.self ) return;
+
+  try {
+    const match = await level.findOne({where: {user_id: message.author.id}});
+    if(match) {
+        match.increment('xp', { by: 2 });
+    }
+    else {
+      message.channel.send(`I was unable to find you in the database, so let\'s fix that real quick ;) Please try again in a second`)
+      const match = await level.create({
+        user_id: message.author.id,
+        xp: 0,
+        level: 0
+    });
+    let firstMessageEmbed = new Discord.MessageEmbed()
+      .setTitle('**First Message**')
+      .setDescription(`**${message.guild.members.cache.get(match.user_id)}** send their first message`)
+      .setColor("#45959f")
+      .addFields(
+        {name: 'Channel', value: message.channel.name, inline: true},
+        {name: 'Message', value: message.content, inline: true}
+      )
+      .setTimestamp()
+      .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
+    return client.channels.cache.get(process.env.SERVER_LOG).send(firstMessageEmbed);
+    }
+  }
+  catch (e) {
+    return console.log(e);
+  }
 
   const args = message.content.slice(prefix.length).trim().split(/ +/);
   const command = args.shift().toLowerCase();

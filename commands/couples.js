@@ -31,7 +31,7 @@ module.exports = {
 	description: 'Sends a random couple-comic + the corresponding Instagram-Link',
 	async execute(message, args) {
         
-        const serverLogEmbed = new Discord.MessageEmbed()
+        const logEmbed = new Discord.MessageEmbed()
             .setColor('#ccb548')
             .setTitle(`**Comic**`)
             .addFields(
@@ -43,7 +43,7 @@ module.exports = {
             .setTimestamp()
             .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
         const channel = message.client.channels.cache.get(process.env.SERVER_LOG);
-        channel.send(serverLogEmbed);
+        channel.send(logEmbed);
 
         if(message.channel.id != process.env.MRS_BLUE_ID) {
             return message.channel.send(`I\'m sorry but you are not allowed to use this command here. Please head over to <#${process.env.MRS_BLUE_ID}> and try there again`)
