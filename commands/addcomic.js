@@ -31,7 +31,7 @@ random.sync();
 module.exports = {
 	name: 'addcomic',
 	description: 'Adds a comic to the database',
-	async execute(message, args) {
+	async execute(client, message, args) {
 
         const serverLogEmbed = new Discord.MessageEmbed()
             .setColor('#cefa8b')

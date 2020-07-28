@@ -29,7 +29,7 @@ const couples = couplesSeq.define('couples', {
 module.exports = {
 	name: 'delcouples',
 	description: 'Deletes a comic from the couple-database',
-	async execute(message, args) {
+	async execute(client, message, args) {
 
         const serverLogEmbed = new Discord.MessageEmbed()
             .setColor('#56793c')

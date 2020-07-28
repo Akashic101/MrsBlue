@@ -31,7 +31,7 @@ couples.sync();
 module.exports = {
 	name: 'addcouples',
 	description: 'Adds a couple-comic to the database',
-	async execute(message, args) {
+	async execute(client, message, args) {
 
         const serverLogEmbed = new Discord.MessageEmbed()
             .setColor('#cefa8b')

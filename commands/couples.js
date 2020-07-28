@@ -29,7 +29,7 @@ const couples = couplesSeq.define('couples', {
 module.exports = {
 	name: 'couples',
 	description: 'Sends a random couple-comic + the corresponding Instagram-Link',
-	async execute(message, args) {
+	async execute(client, message, args) {
         
         const logEmbed = new Discord.MessageEmbed()
             .setColor('#ccb548')

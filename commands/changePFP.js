@@ -4,9 +4,9 @@ const Discord = require('discord.js');
 module.exports = {
 	name: 'changepfp',
 	description: 'Changes the profile-picture of the bot',
-	execute(message, args) {
+	execute(client, message, args) {
 
-var pfp = message.client.AvatarURL
+        var pfp = message.client.AvatarURL
 
         console.log(pfp)
 

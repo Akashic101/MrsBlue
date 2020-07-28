@@ -4,7 +4,7 @@ const Discord = require('discord.js');
 module.exports = {
 	name: 'ban',
 	description: 'Bans a member from the Server',
-	execute(message, args) {
+	execute(client, message, args) {
 
         var date = new Date()
 
