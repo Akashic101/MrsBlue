@@ -65,6 +65,7 @@ module.exports = {
                 return message.channel.send('error');
             }
         } catch (e) {
+            console.log(e)
             message.channel.send("error: " + e);
         }
     }  

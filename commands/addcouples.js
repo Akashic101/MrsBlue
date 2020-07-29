@@ -63,6 +63,7 @@ module.exports = {
                 return message.channel.send(`Comic ${add.image} with link ${add.instagram} added.`);
                 
             } catch (e) {
+                console.log(e)
                 return message.channel.send('Something went wrong with adding the entry. It might already exist in the database');
             }
         }
