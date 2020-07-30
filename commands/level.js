@@ -53,6 +53,8 @@ module.exports = {
 	async execute(client, message, args) {
 
         var date = new Date();
+        var userID = message.author.id;
+        var username = message.author.username;
 
         const logEmbed = new Discord.MessageEmbed()
         .setColor('#e7a09c')
@@ -70,7 +72,7 @@ module.exports = {
 
         try {
             //Find the user by searching through the database with the id
-            const match = await level.findOne({where: {user_id: message.user.id}});
+            const match = await level.findOne({where: {user_id: userID}});
 
             //If a match was found
             if(match) {
