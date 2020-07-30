@@ -53,6 +53,8 @@ module.exports = {
 	async execute(client, message, args) {
 
         var date = new Date();
+        var username = message.mentions.users.first().username;
+        var userID = message.mentions.users.first().id;
 
         const logEmbed = new Discord.MessageEmbed()
             .setColor('#dab147')
@@ -60,7 +62,7 @@ module.exports = {
             .addFields(
                 { name: 'Username', value: message.member.user.tag},
                 { name: 'Command', value: message.content},
-                { name: 'Date', value: date = new Date()}
+                { name: 'Date', value: date}
             )
             .setThumbnail(message.member.user.displayAvatarURL({ format: 'jpg' }))
             .setTimestamp()
@@ -69,8 +71,7 @@ module.exports = {
         channel.send(logEmbed);
 
         try {
-            var username = message.mentions.users.first().username
-            var userID = message.mentions.users.first().id
+            
             //Find the user by searching through the database with the id
             const match = await level.findOne({where: {user_id: userID}});
 
