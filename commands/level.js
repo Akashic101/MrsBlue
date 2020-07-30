@@ -48,7 +48,7 @@ levelTable.sync()
 level.sync()
 
 module.exports = {
-	name: 'getlevel',
+	name: 'level',
 	description: 'Sends the current level of another user',
 	async execute(client, message, args) {
 
