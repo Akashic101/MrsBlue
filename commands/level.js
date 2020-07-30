@@ -48,28 +48,29 @@ levelTable.sync()
 level.sync()
 
 module.exports = {
-	name: 'level',
-	description: 'Sends the current level of a user',
+	name: 'getlevel',
+	description: 'Sends the current level of another user',
 	async execute(client, message, args) {
 
-        var username = message.author.username
         var date = new Date();
-        var userID = message.author.id
 
         const logEmbed = new Discord.MessageEmbed()
-            .setColor('#e7a09c')
-            .setTitle(`**Level**`)
+            .setColor('#0352ea')
+            .setTitle(`**get Level**`)
             .addFields(
                 { name: 'Username', value: message.member.user.tag},
                 { name: 'Command', value: message.content},
                 { name: 'Date', value: date}
             )
-            .setTimestamp()
             .setThumbnail(message.member.user.displayAvatarURL({ format: 'jpg' }))
+            .setTimestamp()
+            .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
         const channel = message.client.channels.cache.get(process.env.SERVER_LOG);
         channel.send(logEmbed);
 
         try {
+            var username = message.mentions.users.first().username
+            var userID = message.mentions.users.first().id
             //Find the user by searching through the database with the id
             const match = await level.findOne({where: {user_id: userID}});
 
@@ -86,9 +87,9 @@ module.exports = {
                         .setColor('#e7a09c')
                         .setTitle(`**Level**`)
                         .setDescription(`**${username}** is level ${index} and has ${match.xp} XP`)
-                        .setThumbnail(message.member.user.displayAvatarURL({ format: 'jpg' }))
+                        .setThumbnail(message.mentions.users.first().displayAvatarURL({ format: 'jpg' }))
                         .setTimestamp()
-                        .setThumbnail(message.member.user.displayAvatarURL({ format: 'jpg' }))
+                        .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
                     return message.channel.send(levelEmbed)
                 }
                 else {
