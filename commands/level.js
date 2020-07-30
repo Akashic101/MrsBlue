@@ -49,14 +49,14 @@ level.sync()
 
 module.exports = {
 	name: 'level',
-	description: 'Sends the current level of another user',
+	description: 'Sends the current level of a user',
 	async execute(client, message, args) {
 
         var date = new Date();
 
         const logEmbed = new Discord.MessageEmbed()
-            .setColor('#0352ea')
-            .setTitle(`**get Level**`)
+        .setColor('#e7a09c')
+            .setTitle(`**Level**`)
             .addFields(
                 { name: 'Username', value: message.member.user.tag},
                 { name: 'Command', value: message.content},
@@ -69,10 +69,8 @@ module.exports = {
         channel.send(logEmbed);
 
         try {
-            var username = message.mentions.users.first().username
-            var userID = message.mentions.users.first().id
             //Find the user by searching through the database with the id
-            const match = await level.findOne({where: {user_id: userID}});
+            const match = await level.findOne({where: {user_id: message.user.id}});
 
             //If a match was found
             if(match) {
@@ -87,7 +85,7 @@ module.exports = {
                         .setColor('#e7a09c')
                         .setTitle(`**Level**`)
                         .setDescription(`**${username}** is level ${index} and has ${match.xp} XP`)
-                        .setThumbnail(message.mentions.users.first().displayAvatarURL({ format: 'jpg' }))
+                        .setThumbnail(message.member.user.displayAvatarURL({ format: 'jpg' }))
                         .setTimestamp()
                         .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
                     return message.channel.send(levelEmbed)
