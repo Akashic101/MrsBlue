@@ -28,8 +28,8 @@ module.exports = {
 	async execute(client, message, args) {
         
         const serverLogEmbed = new Discord.MessageEmbed()
-            .setColor('#3a0430')
-            .setTitle(`**Comic**`)
+            .setColor('#2b1000')
+            .setTitle(`**pets**`)
             .addFields(
                 { name: 'Username', value: message.member.user.tag},
                 { name: 'Command', value: message.content},
@@ -49,8 +49,8 @@ module.exports = {
             const match = await pets.findOne({ order: Sequelize.literal('random()') })
             if(match) {
                 const petsEmbed = new Discord.MessageEmbed()
-                    .setTitle('comic')
-                    .setColor('#1621ee')
+                    .setTitle('pets')
+                    .setColor('#2b1000')
                     .setImage(match.image)
                     .setTimestamp()
                     .setFooter(process.env.BOT_NAME + ' V' + pjson.version, process.env.PROFILE_PICTURE);
