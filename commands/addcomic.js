@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const Discord = require('discord.js');
+var validUrl = require('valid-url');
 var pjson = require('../package.json');
 
 const randomSeq = new Sequelize('database', 'user', 'password', {
@@ -47,6 +48,16 @@ module.exports = {
         const channel = message.client.channels.cache.get(process.env.SERVER_LOG);
         channel.send(serverLogEmbed);
         
+        const stringIsAValidUrl = (s) => {
+            try {
+              new URL(args[0]);
+              return true;
+            } catch (err) {
+              return false;
+            }
+          };
+        
+
         if(message.channel.id != process.env.COMMAND_ID) {
             message.delete()
             return message.channel.send(`I\'m sorry but you are not allowed to use this command here`)
@@ -55,10 +66,11 @@ module.exports = {
         if (!message.member.roles.cache.has(process.env.MOD_ROLE)) {
             return message.channel.send("I'm sorry, you do not have the permissions to do that. If you think this was a mistake please contact <@320574128568401920>")  
         }
-        else if (args.length != 2) {
-            message.channel.send("I'm sorry, it seems like you entered the command wrong. Please check if you entered it correcty or use !commands to see how your command should look like. If you believe there is an error, please contact <@320574128568401920>")
-            return
+
+        else if (args.length != 2 || !(validUrl.isUri(args[0])) || !(validUrl.isUri(args[1]))) {
+            return message.channel.send("I'm sorry, it seems like you entered the command wrong. Please check if you entered it correcty and the first link is from Imgur and the second from Instagram. If you believe there is an error, please contact <@320574128568401920>") 
         }
+
         else {
             try {
                 const add = await random.create({
