@@ -69,13 +69,13 @@ client.login(token)
 
 client.once('ready', () => {
   console.log('Ready!');
+
   client.user.setPresence({
     activity: {
-        name: '!comic' },
+        name: '!comic | !commands' },
         status: 'idle',
         url: 'https://www.github/Akashic101/MrsBlue'})
     .catch(console.error);
-
 });
 
 client.on('guildMemberAdd', (member) => {
