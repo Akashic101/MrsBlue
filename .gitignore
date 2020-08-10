@@ -145,5 +145,4 @@ API
 Training
 Blog
 About
-level.sqlite
-level.sqlite
+*.sqlite
